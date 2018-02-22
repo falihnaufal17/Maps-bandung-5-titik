@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Map Layer</title>
+   <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
+  <script src="https://openlayers.org/en/v4.6.4/build/ol.js" type="text/javascript"></script>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style type="text/css">
+    .map {
+      height: 100%;
+      width: 100%;
+    }
+    *{
+    	margin:0;
+    	padding: 0;
+    }
+  	</style>
+</head>
+<body>
+  <div id="map" class="map"><div id="popup"></div></div>
+    <script>
+      var iconFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([107.5939,-6.9445])),
+        name: 'Kopo',
+        population: 4000,
+        rainfall: 500
+      });
+
+      var iconFeature2 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([107.6144122,-6.9238388])),
+        name: 'Braga',
+        population: 4000,
+        rainfall: 500
+      });
+
+      var iconFeature3 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([107.6143,-6.9318])),
+        name: 'Balong Gede',
+        population: 4000,
+        rainfall: 500
+      });
+
+      var iconFeature4 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([107.5980,-6.9318])),
+        name: 'Babakan Tarogong',
+        population: 4000,
+        rainfall: 500
+      });
+
+      var iconFeature5 = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([107.5943,-6.9273])),
+        name: 'Jamika',
+        population: 4000,
+        rainfall: 500
+      });
+
+      var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://openlayers.org/en/v4.6.4/examples/data/icon.png'
+        }))
+      });
+
+      var iconStyle2 = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://openlayers.org/en/v4.6.4/examples/data/icon.png'
+        }))
+      });
+
+      var iconStyle3 = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://openlayers.org/en/v4.6.4/examples/data/icon.png'
+        }))
+      });
+
+      var iconStyle4 = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://openlayers.org/en/v4.6.4/examples/data/icon.png'
+        }))
+      });
+
+      var iconStyle5 = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: 'https://openlayers.org/en/v4.6.4/examples/data/icon.png'
+        }))
+      });
+
+      iconFeature.setStyle(iconStyle);
+      iconFeature2.setStyle(iconStyle2);
+      iconFeature3.setStyle(iconStyle3);
+      iconFeature4.setStyle(iconStyle4);
+      iconFeature5.setStyle(iconStyle5);
+
+      var vectorSource = new ol.source.Vector({
+        features: [iconFeature]
+      });
+
+      var vectorSource2 = new ol.source.Vector({
+        features: [iconFeature2]
+      });
+
+      var vectorSource3 = new ol.source.Vector({
+        features: [iconFeature3]
+      });
+
+      var vectorSource4 = new ol.source.Vector({
+        features: [iconFeature4]
+      });
+
+      var vectorSource5 = new ol.source.Vector({
+        features: [iconFeature5]
+      });
+
+      var vectorLayer = new ol.layer.Vector({
+        source: vectorSource
+      });
+
+      var vectorLayer2 = new ol.layer.Vector({
+        source: vectorSource2
+      });
+
+      var vectorLayer3 = new ol.layer.Vector({
+        source: vectorSource3
+      });
+
+      var vectorLayer4 = new ol.layer.Vector({
+        source: vectorSource4
+      });
+
+      var vectorLayer5 = new ol.layer.Vector({
+        source: vectorSource5
+      });
+
+      var rasterLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+
+
+      var map = new ol.Map({
+        layers: [rasterLayer, vectorLayer, vectorLayer2, vectorLayer3, vectorLayer4, vectorLayer5],
+        target: document.getElementById('map'),
+        view: new ol.View({
+          center: ol.proj.fromLonLat([107.6, -6.94]),
+          zoom: 14
+        })
+      });
+
+      var element = document.getElementById('popup');
+
+      var popup = new ol.Overlay({
+        element: element,
+        positioning: 'bottom-center',
+        stopEvent: false,
+        offset: [0, -50]
+      });
+      map.addOverlay(popup);
+
+      // display popup on click
+      map.on('click', function(evt) {
+        var feature = map.forEachFeatureAtPixel(evt.pixel,
+            function(feature) {
+              return feature;
+            });
+        if (feature) {
+          var coordinates = feature.getGeometry().getCoordinates();
+          popup.setPosition(coordinates);
+          $(element).popover({
+            'placement': 'top',
+            'html': true,
+            'content': feature.get('name')
+          });
+          $(element).popover('show');
+        } else {
+          $(element).popover('destroy');
+        }
+      });
+
+      // change mouse cursor when over marker
+      map.on('pointermove', function(e) {
+        if (e.dragging) {
+          $(element).popover('destroy');
+          return;
+        }
+        var pixel = map.getEventPixel(e.originalEvent);
+        var hit = map.hasFeatureAtPixel(pixel);
+        map.getTarget().style.cursor = hit ? 'pointer' : '';
+      });
+    </script>
+</body>
+</html>
